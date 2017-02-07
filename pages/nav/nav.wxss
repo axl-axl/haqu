@@ -1,0 +1,53 @@
+page{
+    width:100%;
+    overflow-x:hidden;
+}
+view{
+    box-sizing:border-box;
+}
+page{
+    padding-top:2rem;
+}
+.nav_box{
+    display: block;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:9;
+    background-color:#fff;
+    padding:0.5rem 0;
+    overflow-x:scroll;
+    white-space:nowrap;
+}
+.nav_box .nav{
+    display:inline-block;
+    color:#8c8c8c;
+    font-size:1.2rem;
+    padding: 0 0.5rem
+}
+.nav_box .nav.active{
+    color:black;
+    font-weight: bold;
+}
+.nav_box .more_nav{
+    font-size:1.5rem;
+    width:1.8rem;
+    line-height:1.8rem;
+    padding-bottom:0.5rem;
+}
+.nav_box .more_nav_list{
+    position:absolute;
+    width:30vw;
+    z-index:9;
+    right:0;
+    top:100%;
+    background:#fff;
+    border-radius:5px;
+    text-align:center;
+}
+.more_nav_list .li{
+    display:block;
+    text-align:center;
+    padding:0.5rem 0;
+    border-bottom:1px solid #f2f2f2;
+}

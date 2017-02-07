@@ -1,0 +1,29 @@
+<view class="swiper_nav">
+    <view class="{{day_show}}" data-tab='day' catchtap='tab_check'>每日精选</view>
+    <view class="{{topic_show}}" data-tab='topic' catchtap='tab_check'>话题</view>
+</view>
+
+<scroll-view class='day_list {{day_show}}'>
+    <view class="movie_box" wx:for="{{day_list}}" wx:for-item='res' data-id='{{res.video.id}}' catchtap="video_info">
+        <image src="{{res.pic}}"></image>
+        <view class="day_mask">
+            <text class="day_tag"></text>
+            <view class="movie_title_box">
+                <text class="day_title">{{res.video.title}}</text>
+                <text class="day_duration">{{res.video.duration}}</text>
+            </view>
+        </view>
+    </view>
+</scroll-view>
+
+<scroll-view class='topic_list {{topic_show}}'>
+    <view class="movie_box" wx:for="{{topic_list}}" wx:for-item='res' data-keyword='{{res.keyword}}' catchtap="topic_info">
+        <image src="{{res.bgPic}}"></image>
+        <view class="day_mask">
+            <text class="day_tag"></text>
+            <view class="movie_title_box">
+                <text class="day_title">{{res.title}}</text>
+            </view>
+        </view>
+    </view>
+</scroll-view>

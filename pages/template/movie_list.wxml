@@ -1,0 +1,25 @@
+<template name="movieList">
+    <view class="movie_main">
+        <view class='movie_box' wx:for="{{movie_lists.items}}" wx:for-item="mo">
+            <view class="title_box" data-id='{{mo.id}}' bindtap='video_info'>
+                <view class='title'>{{mo.title}}</view>
+                <view class='play_box'>
+                    <text>{{mo.duration}}</text>
+                    <text>{{mo.playNum}} 次播放</text>
+                </view>
+            </view>
+            <image src="{{mo.pic}}" mode="aspectFill"></image>
+            <view class='operation' catchtap='video_info' data-id='{{mo.id}}'>
+                <text class='move_tags' wx:for="{{mo.tags}}" wx:for-item='tag' data-tag="{{tag}}" catchtap="go_tag" wx:if="{{index==0}}">
+                    {{tag}}
+                </text>
+                <text class='move_tags' wx:for="{{mo.tags}}" wx:for-item='tag' data-tag="{{tag}}" catchtap="go_tag" wx:if="{{index>0 && tag}}">
+                    /{{tag}}
+                </text>
+                <text class='operation_box'  catchtap='video_info' data-id='{{mo.id}}'>
+                    {{mo.commentsCount}}
+                </text>
+            </view>
+        </view>
+    </view>
+</template>
