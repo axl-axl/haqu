@@ -1,0 +1,8 @@
+<import src='../nav/nav' />
+<import src='../template/movie_list' />
+<template is='nav' data='{{nav_lists,nav_list}}'></template>
+<template is="movieList" data='{{movie_lists}}'></template>
+<view class="loading"></view>
+
+
+

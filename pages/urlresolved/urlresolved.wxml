@@ -1,0 +1,6 @@
+<!--pages/urlresolved/urlresolved.wxml-->
+<textarea placeholder="将视频播放地址粘贴到这里" class="url_box" placeholder-class="url_placeholder" bindinput="url_change" bindblur="url_change" />
+<view class="url_warning">
+    提示：目前仅支持腾讯、爱奇艺、网易视频、搜狐、56网视频链接。
+</view>
+<view class="url_btn" bindtap='url_decode'>开始解析</view>

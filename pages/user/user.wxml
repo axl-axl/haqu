@@ -1,0 +1,13 @@
+<!--pages/user/user.wxml-->
+<view class="userinfo">
+    <image class="headimg" src="{{userInfo.userInfo.avatarUrl}}"></image>
+    <view class="nickname">{{userInfo.userInfo.nickName}}</view>
+</view>
+<view class="download_box">
+    上传视频，体验你的专属频道吧
+    <image src="" class="download_btn" catchtap="onload_input"></image>
+</view>
+<view class="operation_box">
+    <view class="history_look" bindtap="history_url">观看记录</view>
+    <view class="movie_like" bindtap="like_url">我喜欢的视频</view>
+</view>
