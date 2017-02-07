@@ -1,7 +1,0 @@
-<template name="nav">
-    <view class='nav_box'>
-        <view wx:for='{{nav_lists}}' class='nav {{item.active}}' bindtap='gourl' data-catid='{{item.id}}' data-index='{{index}}'>
-            {{item.name}}
-        </view>
-    </view>
-</template>
