@@ -45,11 +45,11 @@
                 <text class="comment_author">
                     {{comment.nickName}}
                 </text>
-                <text class="ding" catchtap="comment_zan" data-cmmtid="{{comment.id}}">
+                <text class="ding" catchtap="comment_zan" data-value="{{comment.diggCnt}}" data-index='{{index}}' data-cmmtid="{{comment.id}}" data-clicked='{{comment.clicked}}'>
                     {{comment.diggCnt}}
                 </text>
             </view>
-            <text class='comment_main'>
+            <text class='comment_main {{comment.heightAuto?"active":false}}' catchtap='comment_auto' data-index='{{index}}' data-status='{{comment.heightAuto?true:false}}'>
                 {{comment.text}}
             </text>
             <text class="comment_date">

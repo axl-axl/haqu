@@ -45,10 +45,12 @@ Page({
     wx.request({
       url: 'https://api.dangcdn.com/haquuser/mylikelist',
       data: data,
-      method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-      // header: {}, // 设置请求的 header
+      method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      // header: {
+      //   "Content-Type":"application/x-www-form-urlencoded"
+      // },
       success: function(res){
-        console.log(res);
+        console.log(data)
         that.setData({
           like_list:res.data
         })
@@ -65,22 +67,30 @@ Page({
       times:(new Date()).getTime(),
       nonce:Math.round(Math.random()*1000000),
       utoken:this.data.utoken,
-      vid:vid,
-      isall:'',
-      sign:'weixin'
+      vid:vid
     }
     let data = Object.assign(data_del,default_param);
     wx.request({
-      url: 'https://api.dangcdn.com/haqurcd/dellike',
+      url: 'https://api.dangcdn.com/WxEncode',
       data: data,
       method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-      // header: {}, // 设置请求的 header
-      success: function(res){
-        let like_list = that.data.like_list;
-        console.log(res)
-        like_list.remove(index);
-        that.setData({
-          like_list:like_list
+      header: {
+        "Content-Type":"application/x-www-form-urlencoded"
+      },
+      success: function(msg){
+        wx.request({
+          url: 'https://api.dangcdn.com/haqurcd/dellike',
+          data: msg.data,
+          method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+          header: {
+            "Content-Type":"application/x-www-form-urlencoded"
+          },
+          success: function(res){
+            that.data.like_list.items.splice(index,1);
+            that.setData({
+              like_list:that.data.like_list
+            })
+          }
         })
       }
     })

@@ -58,15 +58,10 @@ App({
           "content-type": "application/x-www-form-urlencoded"
         },
         success: function(res){
-          // that.globalData.userInfoCode = res.data;
-          // //设置缓存
-          // let da  = res.data.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-          // wx.setStorage({
-          //   key: 'userOpind',
-          //   data:JSON.parse(da)
-          // })
           res.data = res.data.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+          console.log(res);
           res.data = JSON.parse(res.data);
+          //储存用户UNtoken
           wx.setStorageSync('utoken',res.data.info.utoken);
           typeof cb =='function'&& cb(that.globalData.userInfoCode);
         }

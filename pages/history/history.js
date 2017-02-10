@@ -7,7 +7,7 @@ Page({
     this.default_params()
   },
   onReady:function(){
-    this.like_list(this.data.network);
+    this.history_list(this.data.network);
   },
   onShow:function(){
     // 页面显示
@@ -34,20 +34,20 @@ Page({
       }
     });
   },
-  //获取喜欢列表
-  like_list:function(default_paras){
+  //获取列表
+  history_list:function(default_paras){
     let that =this;
     let data_like = {
-      utoken:this.data.utoken,
-      uptime:(new Date()).getTime()
+      utoken :this.data.utoken,
+      uptime :(new Date()).getTime()
     }
     let data = Object.assign(data_like,default_paras);
     wx.request({
       url: 'https://api.dangcdn.com/haquuser/mywtchlist',
       data: data,
-      method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-      // header: {}, // 设置请求的 header
+      method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
       success: function(res){
+        console.log(data);
         that.setData({
           history_list:res.data
         })
@@ -64,22 +64,30 @@ Page({
       times:(new Date()).getTime(),
       nonce:Math.round(Math.random()*1000000),
       utoken:this.data.utoken,
-      vid:vid,
-      isall:'',
-      sign:'weixin'
+      vid:vid
     }
     let data = Object.assign(data_del,default_param);
     wx.request({
-      url: 'https://api.dangcdn.com/haqurcd/dellike',
+      url: 'https://api.dangcdn.com/WxEncode',
       data: data,
       method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-      // header: {}, // 设置请求的 header
-      success: function(res){
-        let like_list = that.data.like_list;
-        console.log(res)
-        like_list.remove(index);
-        that.setData({
-          like_list:like_list
+      header: {
+        "Content-Type":"application/x-www-form-urlencoded"
+      },
+      success: function(msg){
+        wx.request({
+          url: 'https://api.dangcdn.com/haqurcd/delwatch',
+          data: msg.data,
+          method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+          header: {
+            "Content-Type":"application/x-www-form-urlencoded"
+          },
+          success: function(res){
+            that.data.history_list.items.splice(index,1);
+            that.setData({
+              history_list: that.data.history_list
+            })
+          }
         })
       }
     })

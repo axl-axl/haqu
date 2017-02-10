@@ -139,7 +139,10 @@ page{
     display:inline-block;
     vertical-align:top;
     border-radius:100%;
-    background-image:url('https://img.dangcdn.com/avatar/6f/15/dcbdd894e910.png');
+    background-size:100%;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-image:url('https://img.dangcdn.com/haquapp/haqu.png');
 }
 .comment_list .comment_box .comment_info{
     width:calc(100% - 4.5rem);
@@ -172,6 +175,14 @@ page{
 .comment_list .comment_box .comment_info .comment_main{
     font-size:1rem;
     color:#8c8c8c;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:5;
+    -webkit-box-orient:vertical;
+}
+.comment_list .comment_box .comment_info .comment_main.active{
+    display:inline;
 }
 .comment_list .comment_box .comment_info .comment_date{
     font-size:0.8rem;

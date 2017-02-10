@@ -13,7 +13,10 @@ Page({
   },
   onReady:function(){
     this.recommond_video(this.data.network);
-    this.comment_list(this.data.network)
+    this.comment_list(this.data.network);
+    this.setData({
+      utoken:wx.getStorageSync('utoken')
+    })
   },
   onReachBottom: function() {
     this.comment_list_resher()
@@ -70,7 +73,6 @@ Page({
   recommond_video:function(default_para){
     let that=this;
     let time = new Date();
-    console.log(default_para);
     let params = {
         vid:this.data.id,
         times:time.getTime(),
@@ -96,17 +98,18 @@ Page({
   //获取评论列表(如果comment_page大于1则是预加载)
   comment_list:function(default_para,comment_page){
     let that=this;
-    let params = {
+    let params_comment = {
         vid:this.data.id,
         page:comment_page?comment_page:1,
     };
-    let data = Object.assign(default_para,params);
+    let data = Object.assign(params_comment,default_para);
     wx.request({
       url: 'https://api.dangcdn.com/haqucomment/commentlist',
       data: data,
       method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
       // header: {}, // 设置请求的 header
       success: function(res){
+        console.log(data)
         if(typeof(res.data)=='string'){
            res.data = common.android_data(res.data);
         }
@@ -134,6 +137,7 @@ Page({
             comment_list_next: that.data.comment_list,
             comment_page: (that.data.comment_page + 1)
           })
+        console.log(that.data.comment_list)
         }
         
       }
@@ -143,40 +147,125 @@ Page({
   zan:function(event){
     let zantype = event.currentTarget.dataset.type;
     let zanid = event.currentTarget.dataset.id;
-    let default_prama = this.data.network;
-    let data_zan = {
-        utoken:'',
+    let default_prama = common.detault_params(this.data.network.network);
+    let that=this;
+    var data_zan = {
+        utoken:this.data.utoken,
         vid:zanid,
-        type:zantype,
+        type:Number(zantype),
         times:(new Date()).getTime(),
-        nonce:Math.round(Math.random()*1000000),
-        sign:'mini'
+        nonce:Math.round(Math.random()*1000000)
     }
-    let data = Object.assign(data_zan,default_prama);
-    console.log(data);
+    let data_zan_post = Object.assign(default_prama,data_zan);
+    wx.request({
+      url: 'https://api.dangcdn.com/WxEncode',
+      data: data_zan_post,
+      method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: {
+        "Content-Type":"application/x-www-form-urlencoded"
+      },
+      success: function(msg){
+        wx.request({
+          url: 'https://api.dangcdn.com/haquevent/updwn',
+          data: msg.data,
+          method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+          header: {
+            "Content-Type":"application/x-www-form-urlencoded"
+          },
+          success: function(res){
+            console.log(res)
+            if(res.data.event=="dwn"){
+                let num_old = that.data.video.info.dwnNum;
+                that.setData({
+                  'video.info.dwnNum':Number(num_old)+1
+                })
+            }
+            if(res.data.event=="up"){
+                let num_old = that.data.video.info.upNum;
+                that.setData({
+                  'video.info.upNum':Number(num_old)+1
+                })
+            }
+          }
+        })
+      }
+    })
   },
   //评论点赞
   comment_zan:function(event){
     let cmmtid = event.currentTarget.dataset.cmmtid;
+    let checked = event.currentTarget.dataset.clicked
     let vid = this.data.video.info.id;
-    let default_prama = this.data.network;
-    let data_zan = {
-        utoken:'',
+    let index = event.currentTarget.dataset.index;
+    let default_prama = common.detault_params(this.data.network.network);
+    let that=this;
+    if(checked){
+      return false;
+    }else{
+      this.data.comment_list[index]['clicked'] = true;
+        that.setData({
+          comment_list:that.data.comment_list
+        })
+    }
+    let data_zan_comment = {
+        utoken:this.data.utoken,
         vid:vid,
         cmmtid:cmmtid,
         times:(new Date()).getTime(),
-        nonce:Math.round(Math.random()*1000000),
-        sign:'mini'
+        nonce:Math.round(Math.random()*1000000)
     }
-    let data = Object.assign(data_zan,default_prama);
-    console.log(default_prama);
+    let data = Object.assign(default_prama,data_zan_comment);
+    wx.request({
+      url: 'https://api.dangcdn.com/WxEncode',
+      data: data,
+      method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: {
+            "Content-Type":"application/x-www-form-urlencoded"
+          },
+      success: function(msg){
+        wx.request({
+          url: 'https://api.dangcdn.com/haquevent/cmmtlike',
+          data: msg.data,
+          method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+          header: {
+            "Content-Type":"application/x-www-form-urlencoded"
+          },
+          success: function(res){
+            console.log(res)
+            if(res.data.code==6200){
+                let old_num = event.currentTarget.dataset.value;
+                let new_num = Number(old_num)+1;
+                that.data.comment_list[index]['diggCnt'] = new_num;
+                that.setData({
+                  comment_list:that.data.comment_list
+                })
+            }
+          }
+        })
+      }
+    })
   },
   //显示预加载
   comment_list_resher:function(){
     this.setData({
       comment_list:this.data.comment_list_next
     });
+    console.log(this.data.comment_page)
     this.comment_list(this.data.network,this.data.comment_page)
+  },
+  //展开评论
+  comment_auto:function(event){
+    let index=event.currentTarget.dataset.index;
+    let status = event.currentTarget.dataset.status;
+    if(status){
+      this.data.comment_list[index]['heightAuto'] =false;
+    }else{
+      this.data.comment_list[index]['heightAuto'] =true;
+    }
+    console.log(this.data.comment_list[index]);
+    this.setData({
+      comment_list:this.data.comment_list
+    })
   },
   //跳转到详情
   video_info:function(event){
@@ -187,7 +276,6 @@ Page({
   },
   //返回首页
   go_home:function(event){
-    console.log(event)
     wx.switchTab({
       url: '../index/index',
     })

@@ -11,40 +11,7 @@ function get_list(event){
       }
     })
 }
-function img_choice(){
-    wx.chooseImage({
-      count: 9, // 最多可以选择的图片张数，默认9
-      sizeType: ['original', 'compressed'], // original 原图，compressed 压缩图，默认二者都有
-      sourceType: ['album', 'camera'], // album 从相册选图，camera 使用相机，默认二者都有
-      success: function(res){
-          var utl=res['tempFilePaths'];
-          wx.saveFile({
-            tempFilePath: utl[0],
-            success: function(res){
-              console.log(res)
-            },
-            fail: function() {
-              console.log('error')
-            },
-          })
-      }
-    })
-}
-function previewimage(){
-  wx.previewImage({
-    // current: 'String', // 当前显示图片的链接，不填则默认为 urls 的第一张
-    urls: ['http://h.hiphotos.baidu.com/image/pic/item/91ef76c6a7efce1b620971c3ad51f3deb48f659d.jpg','http://a.hiphotos.baidu.com/image/pic/item/f9dcd100baa1cd11daf25f19bc12c8fcc3ce2d46.jpg'],
-    success: function(res){
-      console.log('ok')
-    },
-    fail: function() {
-      // fail
-    },
-    complete: function() {
-      // complete
-    }
-  })
-}
+
 function more_nav(that){
     if(that.data.nav_list){
       that.setData({
@@ -87,4 +54,19 @@ function android_data(data){
   items = data.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
   return JSON.parse(items);
 }
-export{get_list,img_choice,previewimage,more_nav,detault_params,android_data}
+//加密
+function encode(data){
+  console.log(data)
+  wx.request({
+    url: 'https://api.dangcdn.com/WxEncode',
+    data: data,
+    method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+    header: {
+        "Content-Type":"application/x-www-form-urlencoded"
+    },
+    success: function(res){
+      console.log(res)
+    }
+  })
+}
+export{get_list,more_nav,detault_params,android_data,encode}

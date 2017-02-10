@@ -35,22 +35,6 @@ Page({
       }
     });
   }, 
-  //触摸
-  touchstart:function(event){
-    console.log('开始')
-    console.log(event)
-    console.log('开始')
-  },
-  touchmove:function(event){
-    console.log('移动')
-    console.log(event)
-    console.log('移动')
-  },
-  touchend:function(event){
-    console.log('结束')
-    console.log(event)
-    console.log('结束')
-  },
   //切换栏目
   tab_check:function(event){
     var tab = event.currentTarget.dataset.tab;

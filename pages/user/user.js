@@ -8,19 +8,9 @@ Page({
   onLoad:function(options){
     let that =this
     app.getUserInfo(function(cb){
+      console.log(cb)
       that.setData({
-        userInfo:cb
-      })
-      app.get_session_key(cb.code,cb,function(a){
-          that.setData({
-            userCode:common.android_data(a)
-          })
-          wx.getStorage({
-            key: 'userOpind',
-            success: function(res){
-              console.log(res);
-            },
-          })
+        userInfo:cb.userInfo
       })
     })
   },

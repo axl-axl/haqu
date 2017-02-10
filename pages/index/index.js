@@ -1,8 +1,15 @@
 let common = require('../../common.js');
+var app = getApp();
 Page({
   data:{},
   onLoad:function(options){
     var that = this;
+      app.getUserInfo(function(cb){
+        that.setData({
+          userInfo:cb
+        })
+        app.get_session_key(cb.code,cb)
+      })
       wx.request({
         url: 'https://api.dangcdn.com/haqucom/catelist',
         data: {},
@@ -91,7 +98,7 @@ Page({
         times:date.getTime(),
         nonce:Math.round(Math.random()*1000000),
         catid:catid,
-        utoken:'',
+        utoken:wx.getStorageSync('utoken'),
         sign:'weixin'
     };
     let data =Object.assign(params,common_params);
@@ -141,6 +148,47 @@ Page({
             movie_lists:res.data
           })
         }
+      }
+    })
+  },
+  //标记喜欢
+  like_btn:function(event){
+    let utoken = wx.getStorageSync('utoken');
+    let vid = event.target.dataset.vid;
+    let type_like = event.target.dataset.type_like;
+    let index = event.target.dataset.index;
+    let that =this;
+    let like_data={
+      utoken:utoken,
+      vid:vid,
+      type:type_like,
+      time:(new Date()).getTime(),
+      nonce:Math.round(Math.random()*100000)
+    }
+    let data_default = this.data.network;
+    let decode_data = Object.assign(data_default,like_data);
+    wx.request({
+      url: 'https://api.dangcdn.com/WxEncode',
+      data: decode_data,
+      method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: {
+        "Content-Type":"application/x-www-form-urlencoded"
+      }, // 设置请求的 header
+      success: function(msg){
+         wx.request({
+           url: 'https://api.dangcdn.com/haqueventweb/svdlike',
+           data:msg.data,
+           method: 'post', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+           header: {
+             "Content-Type":"application/x-www-form-urlencoded"
+           }, // 设置请求的 header
+           success: function(res){
+             that.data.movie_lists['items'][index]['isLike'] = type_like;
+             that.setData({
+               movie_lists:that.data.movie_lists
+             })
+           }
+         })
       }
     })
   },

@@ -19,6 +19,8 @@
                 <text class='operation_box'  catchtap='video_info' data-id='{{mo.id}}'>
                     {{mo.commentsCount}}
                 </text>
+                <text class="like_btn" catchtap="like_btn" data-type_like="1" data-vid="{{mo.id}}" data-index="{{index}}" wx:if='{{mo.isLike == 2}}'></text>
+                <text class="like_btn_select" data-type_like="2" data-vid="{{mo.id}}" data-index="{{index}}" catchtap="like_btn"  wx:if='{{mo.isLike == 1}}'></text>
             </view>
         </view>
     </view>
