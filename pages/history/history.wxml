@@ -1,5 +1,5 @@
 <!--pages/history/history.wxml-->
-    <scroll-view scroll-x='true' wx:for="{{history_list.items}}" wx:for-item="like">
+    <scroll-view scroll-x='true' wx:for="{{history_list.items}}" wx:for-item="like" bindtap="video_info" data-id="{{like.id}}">
         <view class='movie_row'>
             <image src="{{like.pic}}"></image>
             <view class='relation_info'>

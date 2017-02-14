@@ -91,5 +91,12 @@ Page({
         })
       }
     })
+  },
+  //跳转详情
+  video_info:function(event){
+    let id = event.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: '../video/video?id='+id,
+    })
   }
 })
